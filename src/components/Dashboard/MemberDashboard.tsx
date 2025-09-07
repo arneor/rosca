@@ -10,7 +10,7 @@ export default function MemberDashboard() {
       {/* Header */}
       <header>
         <h1 className="text-3xl font-bold text-primary-text">Welcome back!</h1>
-        <p className="text-secondary-text mt-1">Here's your savings and payments at a glance</p>
+        <p className="text-secondary-text mt-1">Here&apos;s your savings and payments at a glance</p>
       </header>
 
       {/* Financial Summary Cards */}
