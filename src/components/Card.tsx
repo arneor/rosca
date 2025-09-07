@@ -7,10 +7,10 @@ export interface CardProps extends React.HTMLAttributes<HTMLDivElement> {
 
 export function Card({ header, footer, className = "", children, ...props }: CardProps) {
   return (
-    <div className={`card p-4 ${className}`} {...props}>
-      {header ? <div className="mb-3 text-sm text-muted">{header}</div> : null}
+    <div className={`card p-6 ${className}`} {...props}>
+      {header ? <div className="mb-4 text-sm font-medium text-text-secondary">{header}</div> : null}
       <div>{children}</div>
-      {footer ? <div className="mt-3 text-sm text-muted">{footer}</div> : null}
+      {footer ? <div className="mt-4 text-sm text-text-tertiary">{footer}</div> : null}
     </div>
   );
 }

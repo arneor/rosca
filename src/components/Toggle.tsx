@@ -12,7 +12,7 @@ export interface ToggleProps {
 
 export function Toggle({ options, value, onChange, ariaLabel = "Toggle", className = "" }: ToggleProps) {
   return (
-    <div role="tablist" aria-label={ariaLabel} className={`inline-flex items-center rounded-[var(--radius-sm)] border border-border bg-surface p-1 ${className}`}>
+    <div role="tablist" aria-label={ariaLabel} className={`inline-flex items-center rounded-lg border border-border-primary bg-surface-secondary p-1 ${className}`}>
       {options.map((opt) => {
         const isSelected = opt.value === value;
         return (
@@ -20,8 +20,10 @@ export function Toggle({ options, value, onChange, ariaLabel = "Toggle", classNa
             key={opt.value}
             role="tab"
             aria-selected={isSelected}
-            className={`px-3 h-9 rounded-[calc(var(--radius-sm)-4px)] text-sm transition-colors ${
-              isSelected ? "bg-brand-600 text-white" : "text-foreground hover:bg-surface-muted"
+            className={`px-3 h-8 rounded-md text-sm font-medium transition-all duration-200 ${
+              isSelected 
+                ? "bg-accent-primary text-white shadow-sm" 
+                : "text-text-secondary hover:text-text-primary hover:bg-surface-primary"
             }`}
             onClick={() => onChange(opt.value)}
             type="button"

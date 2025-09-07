@@ -25,7 +25,7 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
     return (
       <div className={`flex flex-col gap-1 ${className}`}>
         {label ? (
-          <label htmlFor={inputId} className="text-sm text-muted">
+          <label htmlFor={inputId} className="text-sm font-medium text-text-primary">
             {label}
           </label>
         ) : null}
@@ -38,7 +38,7 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
           <input
             id={inputId}
             ref={ref}
-            className={`h-11 rounded-[var(--radius-sm)] border border-border bg-surface text-foreground placeholder:text-muted focus-ring ${
+            className={`h-10 rounded-lg border border-border-primary bg-surface-primary text-text-primary placeholder:text-text-muted focus-ring transition-colors hover:border-accent-secondary/50 focus:border-accent-secondary ${
               leftIcon ? "pl-10" : "pl-3"
             } ${rightIcon ? "pr-10" : "pr-3"}`}
             aria-invalid={!!error}
@@ -52,12 +52,12 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
           )}
         </div>
         {hint && !error ? (
-          <p id={`${inputId}-hint`} className="text-xs text-muted">
+          <p id={`${inputId}-hint`} className="text-xs text-text-tertiary">
             {hint}
           </p>
         ) : null}
         {error ? (
-          <p id={`${inputId}-error`} className="text-xs text-danger">
+          <p id={`${inputId}-error`} className="text-xs text-accent-danger">
             {error}
           </p>
         ) : null}

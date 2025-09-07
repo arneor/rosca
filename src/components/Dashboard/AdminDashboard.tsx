@@ -5,380 +5,247 @@ import KpiCard from "@/components/KpiCard";
 import Card from "@/components/Card";
 import { Button } from "@/components/Button";
 
-interface AlertItem {
-  id: string;
-  type: "overdue" | "approval" | "dispute" | "emergency";
-  title: string;
-  description: string;
-  priority: "high" | "medium" | "low";
-  timestamp: Date;
-  actionLabel: string;
-  actionHref?: string;
-}
-
-interface ActivityItem {
-  id: string;
-  type: "payment" | "member" | "payout" | "group";
-  description: string;
-  timestamp: Date;
-  amount?: number;
-  groupName?: string;
-  memberName?: string;
-}
-
-interface DashboardMetrics {
-  totalGroups: {
-    value: number;
-    active: number;
-    paused: number;
-    completed: number;
-  };
-  totalMembers: {
-    value: number;
-    newThisMonth: number;
-    activeRate: number;
-  };
-  financialVolume: {
-    value: number;
-    monthlyGrowth: number;
-    currency: string;
-  };
-  completionRate: {
-    value: number;
-    completed: number;
-    total: number;
-  };
-  riskMetrics: {
-    overduePayments: number;
-    defaultRisk: number;
-    disputesOpen: number;
-  };
-}
-
-export function AdminDashboard() {
-  // Mock data - in real implementation, this would come from API
-  const [metrics] = React.useState<DashboardMetrics>({
-    totalGroups: { value: 12, active: 10, paused: 2, completed: 34 },
-    totalMembers: { value: 248, newThisMonth: 12, activeRate: 94.2 },
-    financialVolume: { value: 56200, monthlyGrowth: 5.2, currency: "USD" },
-    completionRate: { value: 82, completed: 34, total: 46 },
-    riskMetrics: { overduePayments: 3, defaultRisk: 2.1, disputesOpen: 1 }
-  });
-
-  const [alerts] = React.useState<AlertItem[]>([
-    {
-      id: "1",
-      type: "overdue",
-      title: "John D. overdue payment",
-      description: "$200 in Group A - Due 3 days ago",
-      priority: "high",
-      timestamp: new Date(Date.now() - 3 * 24 * 60 * 60 * 1000),
-      actionLabel: "Send reminder"
-    },
-    {
-      id: "2",
-      type: "approval",
-      title: "Member approval pending",
-      description: "3 new member requests awaiting review",
-      priority: "medium",
-      timestamp: new Date(Date.now() - 2 * 60 * 60 * 1000),
-      actionLabel: "Review",
-      actionHref: "/admin/members/pending"
-    },
-    {
-      id: "3",
-      type: "dispute",
-      title: "Payment dispute raised",
-      description: "Group B - Member claims double payment",
-      priority: "high",
-      timestamp: new Date(Date.now() - 1 * 60 * 60 * 1000),
-      actionLabel: "Investigate"
-    }
-  ]);
-
-  const [recentActivity] = React.useState<ActivityItem[]>([
-    {
-      id: "1",
-      type: "payment",
-      description: "Payment received from Alice",
-      timestamp: new Date(Date.now() - 30 * 60 * 1000),
-      amount: 100,
-      groupName: "Group B",
-      memberName: "Alice"
-    },
-    {
-      id: "2",
-      type: "member",
-      description: "New member joined Group C",
-      timestamp: new Date(Date.now() - 2 * 60 * 60 * 1000),
-      memberName: "Rahul",
-      groupName: "Group C"
-    },
-    {
-      id: "3",
-      type: "payout",
-      description: "Group A payout processed",
-      timestamp: new Date(Date.now() - 4 * 60 * 60 * 1000),
-      amount: 2000,
-      groupName: "Group A"
-    },
-    {
-      id: "4",
-      type: "group",
-      description: "Group D cycle completed successfully",
-      timestamp: new Date(Date.now() - 6 * 60 * 60 * 1000),
-      groupName: "Group D"
-    }
-  ]);
-
-  const getAlertIcon = (type: AlertItem['type']) => {
-    switch (type) {
-      case "overdue":
-        return (
-          <svg className="w-5 h-5 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-          </svg>
-        );
-      case "approval":
-        return (
-          <svg className="w-5 h-5 text-yellow-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-          </svg>
-        );
-      case "dispute":
-        return (
-          <svg className="w-5 h-5 text-orange-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 8h10m0 0V6a2 2 0 00-2-2H9a2 2 0 00-2 2v2m10 0v10a2 2 0 01-2 2H9a2 2 0 01-2-2V8m10 0H7" />
-          </svg>
-        );
-      default:
-        return (
-          <svg className="w-5 h-5 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-          </svg>
-        );
-    }
-  };
-
-  const formatCurrency = (amount: number, currency: string = "USD") => {
-    return new Intl.NumberFormat('en-US', {
-      style: 'currency',
-      currency: currency
-    }).format(amount);
-  };
-
-  const formatTimeAgo = (date: Date) => {
-    const now = new Date();
-    const diffInMinutes = Math.floor((now.getTime() - date.getTime()) / (1000 * 60));
-    
-    if (diffInMinutes < 60) {
-      return `${diffInMinutes}m ago`;
-    } else if (diffInMinutes < 1440) {
-      return `${Math.floor(diffInMinutes / 60)}h ago`;
-    } else {
-      return `${Math.floor(diffInMinutes / 1440)}d ago`;
-    }
-  };
-
+export default function AdminDashboard() {
   return (
     <div className="space-y-6">
       {/* Header */}
       <header className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
         <div>
-          <h1 className="text-2xl font-semibold">Admin Dashboard</h1>
-          <p className="text-muted mt-1">
-            Real-time overview of groups, members, and financial health
-          </p>
+          <h1 className="text-3xl font-bold text-primary-text">Dashboard</h1>
+          <p className="text-secondary-text mt-1">Overview of groups, members, and financials</p>
         </div>
         <div className="flex gap-2">
-          <Button variant="secondary">
-            <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z" />
-            </svg>
-            Add Member
+          <Button variant="secondary" className="hidden sm:flex">
+            📊 Generate Report
           </Button>
-          <Button>
-            <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
-            </svg>
-            Create Group
+          <Button className="bg-gradient-to-r from-financial-blue to-accent-blue hover:from-financial-blue/90 hover:to-accent-blue/90">
+            ✨ Create Group
           </Button>
         </div>
       </header>
 
-      {/* Key Metrics */}
-      <section
-        aria-labelledby="kpi-cards"
-        className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4"
-      >
+      {/* KPI Cards */}
+      <section aria-labelledby="kpi-cards" className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4">
         <h2 id="kpi-cards" className="sr-only">Key metrics</h2>
         
-        <KpiCard
-          label="Total Groups"
-          value={metrics.totalGroups.value.toString()}
-          sublabel={`${metrics.totalGroups.active} active, ${metrics.totalGroups.paused} paused`}
+        <KpiCard 
+          label="Total Groups" 
+          value="12" 
+          sublabel="10 active, 2 paused" 
           action={
-            <a className="text-brand-600 hover:text-brand-700" href="/admin/groups">
-              Manage
-            </a>
+            <div className="flex items-center text-success-green">
+              <span className="text-xs">↗ +2</span>
+            </div>
           }
         />
         
-        <KpiCard
-          label="Total Members"
-          value={metrics.totalMembers.value.toString()}
-          sublabel={`+${metrics.totalMembers.newThisMonth} this month`}
+        <KpiCard 
+          label="Total Members" 
+          value="248" 
+          sublabel="+12 this month" 
           action={
-            <a className="text-brand-600 hover:text-brand-700" href="/admin/members">
-              View
-            </a>
+            <div className="flex items-center text-success-green">
+              <span className="text-xs">↗ +5%</span>
+            </div>
           }
         />
         
-        <KpiCard
-          label="Financial Volume"
-          value={formatCurrency(metrics.financialVolume.value)}
-          sublabel={`+${metrics.financialVolume.monthlyGrowth}% vs last month`}
+        <KpiCard 
+          label="Financial Volume" 
+          value="$56,200" 
+          sublabel="+5% vs last month" 
           action={
-            <a className="text-brand-600 hover:text-brand-700" href="/admin/reports/financial">
-              Reports
-            </a>
+            <div className="flex items-center text-success-green">
+              <span className="text-xs">↗ +$2.8k</span>
+            </div>
           }
         />
         
-        <KpiCard
-          label="Completion Rate"
-          value={`${metrics.completionRate.value}%`}
-          sublabel={`${metrics.completionRate.completed} completed`}
+        <KpiCard 
+          label="Completion Rate" 
+          value="82%" 
+          sublabel="34 completed" 
           action={
-            <a className="text-brand-600 hover:text-brand-700" href="/admin/reports/groups">
-              Analytics
-            </a>
+            <div className="flex items-center text-warning-amber">
+              <span className="text-xs">↗ +3%</span>
+            </div>
           }
         />
       </section>
 
-      {/* Risk Indicators */}
-      <section className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-        <Card className="bg-red-50 border-red-200">
-          <div className="flex items-center gap-3">
-            <div className="w-10 h-10 bg-red-100 rounded-lg flex items-center justify-center">
-              <svg className="w-5 h-5 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-              </svg>
-            </div>
-            <div>
-              <p className="text-sm font-medium text-red-900">Overdue Payments</p>
-              <p className="text-2xl font-bold text-red-700">{metrics.riskMetrics.overduePayments}</p>
-            </div>
-          </div>
-        </Card>
-
-        <Card className="bg-yellow-50 border-yellow-200">
-          <div className="flex items-center gap-3">
-            <div className="w-10 h-10 bg-yellow-100 rounded-lg flex items-center justify-center">
-              <svg className="w-5 h-5 text-yellow-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
-              </svg>
-            </div>
-            <div>
-              <p className="text-sm font-medium text-yellow-900">Default Risk</p>
-              <p className="text-2xl font-bold text-yellow-700">{metrics.riskMetrics.defaultRisk}%</p>
-            </div>
-          </div>
-        </Card>
-
-        <Card className="bg-orange-50 border-orange-200">
-          <div className="flex items-center gap-3">
-            <div className="w-10 h-10 bg-orange-100 rounded-lg flex items-center justify-center">
-              <svg className="w-5 h-5 text-orange-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 8h10m0 0V6a2 2 0 00-2-2H9a2 2 0 00-2 2v2m10 0v10a2 2 0 01-2 2H9a2 2 0 01-2-2V8m10 0H7" />
-              </svg>
-            </div>
-            <div>
-              <p className="text-sm font-medium text-orange-900">Open Disputes</p>
-              <p className="text-2xl font-bold text-orange-700">{metrics.riskMetrics.disputesOpen}</p>
-            </div>
-          </div>
-        </Card>
-      </section>
-
-      {/* Priority Alerts and Recent Activity */}
-      <section className="grid grid-cols-1 xl:grid-cols-3 gap-4">
-        <Card className="p-0 overflow-hidden xl:col-span-2">
-          <div className="p-4 border-b border-border">
+      {/* Main content grid */}
+      <section className="grid grid-cols-1 xl:grid-cols-3 gap-6">
+        {/* Priority Alerts */}
+        <Card className="xl:col-span-2 p-0 overflow-hidden">
+          <div className="p-6 border-b border-border">
             <div className="flex items-center justify-between">
               <div>
-                <h3 className="font-medium">Priority Alerts</h3>
-                <p className="text-xs text-muted">
-                  Urgent issues requiring immediate attention
-                </p>
+                <h3 className="text-lg font-semibold text-primary-text">Priority Alerts</h3>
+                <p className="text-sm text-secondary-text">Overdue payments and pending approvals</p>
               </div>
-              <div className="flex items-center gap-2">
-                <div className="w-2 h-2 bg-red-500 rounded-full animate-pulse"></div>
-                <span className="text-xs text-muted">Live</span>
+              <div className="flex items-center space-x-2">
+                <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-danger/10 text-danger">
+                  🔴 3 urgent
+                </span>
               </div>
             </div>
           </div>
-          <ul className="divide-y divide-border max-h-96 overflow-y-auto">
-            {alerts.map((alert) => (
-              <li key={alert.id} className="p-4 hover:bg-gray-50 transition-colors">
-                <div className="flex items-start gap-3">
-                  {getAlertIcon(alert.type)}
-                  <div className="flex-1 min-w-0">
-                    <div className="flex items-center justify-between">
-                      <p className="text-sm font-medium text-gray-900">{alert.title}</p>
-                      <span className="text-xs text-muted">{formatTimeAgo(alert.timestamp)}</span>
-                    </div>
-                    <p className="text-sm text-gray-600 mt-1">{alert.description}</p>
-                    <div className="flex items-center justify-between mt-2">
-                      <span className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ${
-                        alert.priority === 'high' 
-                          ? 'bg-red-100 text-red-800' 
-                          : alert.priority === 'medium'
-                          ? 'bg-yellow-100 text-yellow-800'
-                          : 'bg-gray-100 text-gray-800'
-                      }`}>
-                        {alert.priority} priority
-                      </span>
-                      <Button size="sm" variant="secondary">
-                        {alert.actionLabel}
-                      </Button>
-                    </div>
+          
+          <div className="divide-y divide-border">
+            <div className="p-6 flex items-center justify-between hover:bg-elevated-background transition-colors">
+              <div className="flex items-center space-x-4">
+                <div className="flex-shrink-0">
+                  <div className="w-10 h-10 rounded-full bg-gradient-to-br from-danger to-warning-amber flex items-center justify-center">
+                    <span className="text-white text-sm">⚠️</span>
                   </div>
                 </div>
-              </li>
-            ))}
-          </ul>
+                <div>
+                  <p className="text-sm font-medium text-primary-text">John D. overdue: $200 in Group A</p>
+                  <p className="text-xs text-secondary-text">Due 3 days ago • Group A</p>
+                </div>
+              </div>
+              <Button size="sm" variant="secondary" className="bg-warning-amber/10 text-warning-amber hover:bg-warning-amber/20">
+                Send reminder
+              </Button>
+            </div>
+            
+            <div className="p-6 flex items-center justify-between hover:bg-elevated-background transition-colors">
+              <div className="flex items-center space-x-4">
+                <div className="flex-shrink-0">
+                  <div className="w-10 h-10 rounded-full bg-gradient-to-br from-info-cyan to-accent-blue flex items-center justify-center">
+                    <span className="text-white text-sm">👥</span>
+                  </div>
+                </div>
+                <div>
+                  <p className="text-sm font-medium text-primary-text">Approval pending: 3 new member requests</p>
+                  <p className="text-xs text-secondary-text">Review queue • Groups B, C, D</p>
+                </div>
+              </div>
+              <Button size="sm" className="bg-gradient-to-r from-info-cyan to-accent-blue">
+                Review
+              </Button>
+            </div>
+            
+            <div className="p-6 flex items-center justify-between hover:bg-elevated-background transition-colors">
+              <div className="flex items-center space-x-4">
+                <div className="flex-shrink-0">
+                  <div className="w-10 h-10 rounded-full bg-gradient-to-br from-success-green to-info-cyan flex items-center justify-center">
+                    <span className="text-white text-sm">💰</span>
+                  </div>
+                </div>
+                <div>
+                  <p className="text-sm font-medium text-primary-text">Group E payout ready for processing</p>
+                  <p className="text-xs text-secondary-text">$1,200 • 5 members • Due today</p>
+                </div>
+              </div>
+              <Button size="sm" variant="secondary" className="bg-success-green/10 text-success-green hover:bg-success-green/20">
+                Process
+              </Button>
+            </div>
+          </div>
         </Card>
 
+        {/* Recent Activity */}
         <Card>
-          <div className="flex items-center justify-between mb-3">
-            <h3 className="font-medium">Recent Activity</h3>
-            <a href="/admin/activity" className="text-xs text-brand-600 hover:text-brand-700">
-              View all
-            </a>
-          </div>
-          <ul className="space-y-3 text-sm max-h-96 overflow-y-auto">
-            {recentActivity.map((activity) => (
-              <li key={activity.id} className="flex items-start gap-2">
-                <div className="w-2 h-2 bg-brand-500 rounded-full mt-2 flex-shrink-0"></div>
+          <div className="p-6">
+            <h3 className="text-lg font-semibold text-primary-text mb-4">Recent Activity</h3>
+            <div className="space-y-4">
+              <div className="flex items-start space-x-3">
+                <div className="flex-shrink-0 w-2 h-2 rounded-full bg-success-green mt-2"></div>
                 <div className="flex-1 min-w-0">
-                  <p className="text-gray-900">{activity.description}</p>
-                  {activity.amount && (
-                    <p className="text-brand-600 font-medium">
-                      {formatCurrency(activity.amount)}
-                    </p>
-                  )}
-                  <p className="text-xs text-muted">{formatTimeAgo(activity.timestamp)}</p>
+                  <p className="text-sm text-primary-text">Payment received: $100</p>
+                  <p className="text-xs text-secondary-text">Group B • Alice • 2 min ago</p>
                 </div>
-              </li>
-            ))}
-          </ul>
+              </div>
+              
+              <div className="flex items-start space-x-3">
+                <div className="flex-shrink-0 w-2 h-2 rounded-full bg-info-cyan mt-2"></div>
+                <div className="flex-1 min-w-0">
+                  <p className="text-sm text-primary-text">New member joined: Rahul</p>
+                  <p className="text-xs text-secondary-text">Group C • 15 min ago</p>
+                </div>
+              </div>
+              
+              <div className="flex items-start space-x-3">
+                <div className="flex-shrink-0 w-2 h-2 rounded-full bg-accent-blue mt-2"></div>
+                <div className="flex-1 min-w-0">
+                  <p className="text-sm text-primary-text">Group A payout processed</p>
+                  <p className="text-xs text-secondary-text">$800 • 1 hour ago</p>
+                </div>
+              </div>
+              
+              <div className="flex items-start space-x-3">
+                <div className="flex-shrink-0 w-2 h-2 rounded-full bg-warning-amber mt-2"></div>
+                <div className="flex-1 min-w-0">
+                  <p className="text-sm text-primary-text">Group D cycle completed</p>
+                  <p className="text-xs text-secondary-text">8 members • 2 hours ago</p>
+                </div>
+              </div>
+            </div>
+            
+            <Button variant="ghost" className="w-full mt-4 text-sm">
+              View all activity →
+            </Button>
+          </div>
+        </Card>
+      </section>
+
+      {/* Quick Stats */}
+      <section className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <Card>
+          <div className="p-6">
+            <div className="flex items-center justify-between mb-4">
+              <h3 className="text-lg font-semibold text-primary-text">Group Health</h3>
+              <span className="text-2xl">📊</span>
+            </div>
+            <div className="space-y-3">
+              <div className="flex justify-between items-center">
+                <span className="text-sm text-secondary-text">Healthy Groups</span>
+                <span className="text-sm font-medium text-success-green">8/12</span>
+              </div>
+              <div className="w-full bg-elevated-background rounded-full h-2">
+                <div className="bg-gradient-to-r from-success-green to-info-cyan h-2 rounded-full" style={{width: '67%'}}></div>
+              </div>
+            </div>
+          </div>
+        </Card>
+        
+        <Card>
+          <div className="p-6">
+            <div className="flex items-center justify-between mb-4">
+              <h3 className="text-lg font-semibold text-primary-text">Payment Collection</h3>
+              <span className="text-2xl">💳</span>
+            </div>
+            <div className="space-y-3">
+              <div className="flex justify-between items-center">
+                <span className="text-sm text-secondary-text">This Month</span>
+                <span className="text-sm font-medium text-primary-text">$12,400</span>
+              </div>
+              <div className="w-full bg-elevated-background rounded-full h-2">
+                <div className="bg-gradient-to-r from-accent-blue to-financial-blue h-2 rounded-full" style={{width: '78%'}}></div>
+              </div>
+            </div>
+          </div>
+        </Card>
+        
+        <Card>
+          <div className="p-6">
+            <div className="flex items-center justify-between mb-4">
+              <h3 className="text-lg font-semibold text-primary-text">Member Engagement</h3>
+              <span className="text-2xl">👥</span>
+            </div>
+            <div className="space-y-3">
+              <div className="flex justify-between items-center">
+                <span className="text-sm text-secondary-text">Active Members</span>
+                <span className="text-sm font-medium text-primary-text">89%</span>
+              </div>
+              <div className="w-full bg-elevated-background rounded-full h-2">
+                <div className="bg-gradient-to-r from-premium-gold to-warning-amber h-2 rounded-full" style={{width: '89%'}}></div>
+              </div>
+            </div>
+          </div>
         </Card>
       </section>
     </div>
   );
 }
-
-export default AdminDashboard;

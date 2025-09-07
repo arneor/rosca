@@ -56,7 +56,7 @@ export default function AdminDashboard() {
                   </p>
                 </div>
                 <div className="w-12 h-12 rounded-lg flex items-center justify-center" style={{
-                  background: 'linear-gradient(135deg, var(--accent-blue), var(--financial-blue))'
+                  background: 'linear-gradient(135deg, #0EA5E9, #3B82F6)'
                 }}>
                   <span className="text-xl">👥</span>
                 </div>
@@ -72,7 +72,7 @@ export default function AdminDashboard() {
                   </p>
                 </div>
                 <div className="w-12 h-12 rounded-lg flex items-center justify-center" style={{
-                  background: 'linear-gradient(135deg, var(--success-green), var(--info-cyan))'
+                  background: 'linear-gradient(135deg, #059669, #06B6D4)'
                 }}>
                   <span className="text-xl">🏦</span>
                 </div>
@@ -88,7 +88,7 @@ export default function AdminDashboard() {
                   </p>
                 </div>
                 <div className="w-12 h-12 rounded-lg flex items-center justify-center" style={{
-                  background: 'linear-gradient(135deg, var(--premium-gold), var(--warning-amber))'
+                  background: 'linear-gradient(135deg, #F59E0B, #EF4444)'
                 }}>
                   <span className="text-xl">💰</span>
                 </div>
@@ -104,7 +104,7 @@ export default function AdminDashboard() {
                   </p>
                 </div>
                 <div className="w-12 h-12 rounded-lg flex items-center justify-center" style={{
-                  background: 'linear-gradient(135deg, var(--success-green), var(--accent-blue))'
+                  background: 'linear-gradient(135deg, #059669, #0EA5E9)'
                 }}>
                   <span className="text-xl">⚡</span>
                 </div>
@@ -179,20 +179,33 @@ export default function AdminDashboard() {
                 Monthly Volume Trend
               </h3>
               <div className="h-64 flex items-end justify-between gap-2">
-                {Array.from({ length: 12 }).map((_, i) => (
-                  <div key={i} className="flex-1 flex flex-col items-center">
-                    <div 
-                      className="w-full rounded-t-lg mb-2"
-                      style={{
-                        height: `${Math.random() * 200 + 50}px`,
-                        background: 'linear-gradient(180deg, var(--financial-blue), var(--accent-blue))'
-                      }}
-                    />
-                    <span className="text-xs" style={{ color: 'var(--muted-text)' }}>
-                      {new Date(2024, i).toLocaleDateString('en', { month: 'short' })}
-                    </span>
-                  </div>
-                ))}
+                {Array.from({ length: 12 }).map((_, i) => {
+                  const height = Math.random() * 200 + 50;
+                  return (
+                    <div key={i} className="flex-1 flex flex-col items-center">
+                      <div 
+                        className="w-full rounded-t-lg mb-2 transition-all duration-300 hover:opacity-80 cursor-pointer"
+                        style={{
+                          height: `${height}px`,
+                          background: 'linear-gradient(180deg, #0EA5E9, #3B82F6)',
+                          minHeight: '20px'
+                        }}
+                        title={`Month ${i + 1}: ₹${(height * 1000).toLocaleString()}`}
+                      />
+                      <span className="text-xs" style={{ color: 'var(--muted-text)' }}>
+                        {new Date(2024, i).toLocaleDateString('en', { month: 'short' })}
+                      </span>
+                    </div>
+                  );
+                })}
+              </div>
+              <div className="mt-4 pt-4 border-t" style={{ borderColor: 'var(--border)' }}>
+                <div className="flex items-center justify-between text-sm">
+                  <span style={{ color: 'var(--secondary-text)' }}>Total Volume</span>
+                  <span className="font-semibold" style={{ color: 'var(--accent-blue)' }}>
+                    ₹{dashboardData.monthlyVolume.toLocaleString()}
+                  </span>
+                </div>
               </div>
             </Card>
 
