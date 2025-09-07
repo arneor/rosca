@@ -150,7 +150,7 @@ export function MemberDashboard() {
         <div>
           <h1 className="text-2xl font-semibold">Welcome back</h1>
           <p className="text-muted mt-1">
-            Here's your savings and payments at a glance
+            Here&apos;s your savings and payments at a glance
           </p>
         </div>
         <div className="flex gap-2">

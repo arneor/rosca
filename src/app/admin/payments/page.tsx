@@ -4,7 +4,6 @@ import * as React from "react";
 import { useRouter } from "next/navigation";
 import AdminNavigation from "@/components/Navigation/AdminNavigation";
 import Card from "@/components/Card";
-import { Button } from "@/components/Button";
 
 export default function AdminPaymentsPage() {
   const router = useRouter();

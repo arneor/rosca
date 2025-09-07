@@ -62,7 +62,7 @@ export default function NotFound() {
             Page Not Found
           </h1>
           <p className="text-lg mb-2" style={{ color: 'var(--secondary-text)' }}>
-            Oops! The page you're looking for doesn't exist.
+            Oops! The page you&apos;re looking for doesn&apos;t exist.
           </p>
           <p className="text-sm" style={{ color: 'var(--muted-text)' }}>
             It might have been moved, deleted, or you entered the wrong URL.
@@ -86,7 +86,7 @@ export default function NotFound() {
             </span>
           </div>
           <p className="text-xs" style={{ color: 'var(--muted-text)' }}>
-            Don't worry, your data and financial information remain protected.
+            Don&apos;t worry, your data and financial information remain protected.
           </p>
         </div>
 

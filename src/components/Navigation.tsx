@@ -16,7 +16,7 @@ interface NavigationProps {
   userRole: "admin" | "member";
 }
 
-export function Navigation({ items, userRole }: NavigationProps) {
+export function Navigation({ items }: NavigationProps) {
   const pathname = usePathname();
   const [expandedItems, setExpandedItems] = React.useState<string[]>([]);
 

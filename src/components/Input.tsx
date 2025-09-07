@@ -16,7 +16,8 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
     { label, error, hint, leftIcon, rightIcon, id, className = "", ...props },
     ref
   ) => {
-    const inputId = id || React.useId();
+    const generatedId = React.useId();
+    const inputId = id || generatedId;
     const describedByIds: string[] = [];
     if (hint) describedByIds.push(`${inputId}-hint`);
     if (error) describedByIds.push(`${inputId}-error`);

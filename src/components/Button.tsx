@@ -13,18 +13,18 @@ export interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElemen
   rightIcon?: React.ReactNode;
 }
 
-export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
+const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
   ({ variant = "primary", size = "md", className = "", children, ...props }, ref) => {
     const baseClasses = "inline-flex items-center justify-center font-medium transition-all duration-300 focus-ring disabled:opacity-50 disabled:pointer-events-none transform hover:scale-102";
     
-    const variants = {
+    const variants: Record<ButtonVariant, string> = {
       primary: "text-white hover:shadow-lg",
       secondary: "border text-white hover:shadow-md",
       ghost: "text-white hover:bg-opacity-10",
       danger: "text-white hover:shadow-lg",
     };
 
-    const sizes = {
+    const sizes: Record<ButtonSize, string> = {
       sm: "h-8 px-3 text-sm",
       md: "h-10 px-4 text-sm", 
       lg: "h-11 px-6 text-base",
@@ -74,6 +74,6 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
   }
 );
 
-export default Button;
+Button.displayName = "Button";
 
-
+export { Button };

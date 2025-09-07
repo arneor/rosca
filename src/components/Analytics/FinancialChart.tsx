@@ -165,7 +165,6 @@ export function FinancialChart({
       <div className="flex items-center gap-6">
         <svg width="240" height="240" viewBox="0 0 240 240">
           {data.map((point, index) => {
-            const percentage = (point.value / total) * 100;
             const angle = (point.value / total) * 360;
             const startAngle = currentAngle;
             const endAngle = currentAngle + angle;

@@ -4,12 +4,6 @@ import * as React from "react";
 import Card from "@/components/Card";
 import { Button } from "@/components/Button";
 
-interface GroupMember {
-  id: string;
-  name: string;
-  reliabilityScore: number;
-  paymentStatus: "current" | "overdue" | "paid";
-}
 
 interface GroupCardProps {
   id: string;
@@ -31,7 +25,6 @@ interface GroupCardProps {
 }
 
 export function GroupCard({
-  id,
   name,
   description,
   status,

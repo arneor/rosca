@@ -16,10 +16,26 @@ interface GroupTemplate {
   category: "festival" | "emergency" | "business" | "education" | "custom";
 }
 
+interface GroupData {
+  name: string;
+  description: string;
+  contributionAmount: number;
+  maxMembers: number;
+  totalCycles: number;
+  payoutFrequency: string;
+  startDate: string;
+  riskLevel: "low" | "medium" | "high";
+  requiresApproval: boolean;
+  minimumReliabilityScore: number;
+  securityDeposit: number;
+  category: GroupTemplate['category'];
+  template?: string;
+}
+
 interface CreateGroupWizardProps {
   isOpen: boolean;
   onClose: () => void;
-  onSubmit: (groupData: any) => void;
+  onSubmit: (groupData: GroupData) => void;
 }
 
 const groupTemplates: GroupTemplate[] = [

@@ -201,7 +201,7 @@ export function LoginForm({ userType, onLogin, onForgotPassword, onSwitchUserTyp
               <div className="text-center">
                 <h3 className="text-lg font-medium text-gray-900">Reset Password</h3>
                 <p className="mt-2 text-sm text-gray-600">
-                  Enter your email address and we'll send you a reset link
+                  Enter your email address and we&apos;ll send you a reset link
                 </p>
               </div>
 

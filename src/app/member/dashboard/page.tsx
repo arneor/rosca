@@ -8,7 +8,7 @@ import { Button } from "@/components/Button";
 
 export default function MemberDashboard() {
   const router = useRouter();
-  const [memberData, setMemberData] = React.useState({
+  const [memberData] = React.useState({
     name: "Priya Sharma",
     totalSavings: 45000,
     activeGroups: 3,
