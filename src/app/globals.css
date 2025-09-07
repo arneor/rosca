@@ -1,26 +1,228 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  /* ROSCA 2025 Design System - Trust-First Color Palette */
+  
+  /* Primary Colors - Trust & Financial Security */
+  --trust-navy: #0A1628;
+  --deep-trust-blue: #1E3A5F;
+  --financial-blue: #2563EB;
+  --accent-blue: #3B82F6;
+
+  /* Secondary Colors - Professional Depth */
+  --charcoal-black: #1F2937;
+  --soft-black: #374151;
+  --trust-gray: #6B7280;
+  --light-gray: #9CA3AF;
+
+  /* Accent Colors - Status & Feedback */
+  --success-green: #10B981;
+  --warning-amber: #F59E0B;
+  --error-red: #EF4444;
+  --info-cyan: #06B6D4;
+  --premium-gold: #F59E0B;
+
+  /* Background System - Dark Theme Foundation */
+  --primary-background: #0F172A;
+  --secondary-background: #1E293B;
+  --card-background: #334155;
+  --elevated-background: #475569;
+  --overlay-background: rgba(15, 23, 42, 0.95);
+
+  /* Text Colors - Hierarchy & Readability */
+  --primary-text: #F8FAFC;
+  --secondary-text: #CBD5E1;
+  --muted-text: #94A3B8;
+  --accent-text: #60A5FA;
+
+  /* Legacy Brand Colors (for compatibility) */
+  --brand-50: #eff6ff;
+  --brand-100: #dbeafe;
+  --brand-200: #bfdbfe;
+  --brand-300: #93c5fd;
+  --brand-400: #60a5fa;
+  --brand-500: #3b82f6;
+  --brand-600: #2563eb;
+  --brand-700: #1d4ed8;
+  --brand-800: #1e40af;
+  --brand-900: #1e3a8a;
+
+  /* Semantic Colors */
+  --success: var(--success-green);
+  --warning: var(--warning-amber);
+  --danger: var(--error-red);
+
+  /* Surface System - Glassmorphism & Elevation */
+  --surface: var(--card-background);
+  --surface-muted: var(--secondary-background);
+  --elevation-1: 0 1px 2px rgba(0, 0, 0, 0.3);
+  --elevation-2: 0 8px 32px rgba(0, 0, 0, 0.3);
+  --elevation-3: 0 16px 64px rgba(0, 0, 0, 0.4);
+
+  /* Glassmorphism Effects */
+  --glass-background: rgba(51, 65, 85, 0.4);
+  --glass-border: rgba(148, 163, 184, 0.2);
+  --glass-backdrop-blur: blur(16px);
+
+  /* Radii - Modern & Friendly */
+  --radius-xs: 6px;
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 16px;
+  --radius-xl: 24px;
+
+  /* Typography System */
+  --font-primary: "Inter Variable", ui-sans-serif, system-ui, sans-serif;
+  --font-display: "Poppins", ui-sans-serif, system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, monospace;
+  --font-geist-sans: var(--font-primary);
+  --font-geist-mono: var(--font-mono);
+
+  /* Font Scales */
+  --text-display-xl: clamp(2.5rem, 5vw, 4rem);
+  --text-display-lg: clamp(2rem, 4vw, 3rem);
+  --text-display-md: clamp(1.5rem, 3vw, 2.25rem);
+  --text-heading-xl: 1.875rem;
+  --text-heading-lg: 1.5rem;
+  --text-heading-md: 1.25rem;
+  --text-body-xl: 1.125rem;
+  --text-body-lg: 1rem;
+  --text-body-md: 0.875rem;
+  --text-body-sm: 0.75rem;
+  --text-caption: 0.625rem;
+
+  /* Spacing Scale */
+  --space-xs: 4px;
+  --space-sm: 8px;
+  --space-md: 12px;
+  --space-lg: 16px;
+  --space-xl: 24px;
+  --space-xxl: 32px;
+  --space-xxxl: 48px;
+  --space-xxxxl: 64px;
+
+  /* Animation System */
+  --duration-quick: 150ms;
+  --duration-normal: 300ms;
+  --duration-slow: 500ms;
+  --ease-out: cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  --ease-in-out: cubic-bezier(0.4, 0, 0.2, 1);
+  --ease-bounce: cubic-bezier(0.68, -0.55, 0.265, 1.55);
+
+  /* Dark Theme (default) */
+  --background: var(--primary-background);
+  --foreground: var(--primary-text);
+  --muted: var(--muted-text);
+  --border: rgba(148, 163, 184, 0.2);
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
+/* Tailwind theme configuration */
+@layer base {
   :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+    --color-background: var(--primary-background);
+    --color-foreground: var(--primary-text);
+    --color-muted: var(--muted-text);
+    --color-border: var(--border);
+    --color-surface: var(--card-background);
+    --color-surface-muted: var(--secondary-background);
+
+    --color-brand-50: var(--brand-50);
+    --color-brand-100: var(--brand-100);
+    --color-brand-200: var(--brand-200);
+    --color-brand-300: var(--brand-300);
+    --color-brand-400: var(--brand-400);
+    --color-brand-500: var(--brand-500);
+    --color-brand-600: var(--brand-600);
+    --color-brand-700: var(--brand-700);
+    --color-brand-800: var(--brand-800);
+    --color-brand-900: var(--brand-900);
+
+    --color-success: var(--success);
+    --color-warning: var(--warning);
+    --color-danger: var(--danger);
   }
 }
 
+/* Force dark theme - remove media query override */
+html {
+  background: var(--primary-background);
+  color: var(--primary-text);
+}
+
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background: var(--primary-background);
+  color: var(--primary-text);
+  font-family: var(--font-primary), ui-sans-serif, system-ui, -apple-system,
+    Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji", "Segoe UI Emoji";
+  min-height: 100vh;
+  margin: 0;
+  padding: 0;
+}
+
+/* Ensure all elements inherit the dark theme */
+* {
+  border-color: var(--border);
+}
+
+/* Override any white backgrounds and apply dark theme globally */
+div, main, section, article, aside, header, footer, nav {
+  background-color: inherit;
+}
+
+/* Apply dark theme to common Tailwind classes */
+.bg-white {
+  background-color: var(--primary-background) !important;
+}
+
+.bg-gray-50 {
+  background-color: var(--secondary-background) !important;
+}
+
+.text-gray-900 {
+  color: var(--primary-text) !important;
+}
+
+.text-gray-600 {
+  color: var(--secondary-text) !important;
+}
+
+.text-gray-500 {
+  color: var(--muted-text) !important;
+}
+
+/* Utility primitives for non-TW contexts */
+.card {
+  background: var(--card-background);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--elevation-2);
+  backdrop-filter: var(--glass-backdrop-blur);
+}
+
+.glass-card {
+  background: var(--glass-background);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--elevation-2);
+  backdrop-filter: var(--glass-backdrop-blur);
+}
+
+.focus-ring:focus-visible {
+  outline: 2px solid var(--financial-blue);
+  outline-offset: 2px;
+}
+
+/* Trust indicators */
+.trust-badge {
+  background: linear-gradient(135deg, var(--financial-blue), var(--success-green));
+  color: var(--primary-text);
+  padding: 4px 12px;
+  border-radius: var(--radius-sm);
+  font-size: var(--text-body-sm);
+  font-weight: 600;
+}
+
+.security-indicator {
+  color: var(--premium-gold);
+  font-weight: 600;
 }
